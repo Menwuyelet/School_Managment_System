@@ -3,8 +3,9 @@ from users.models import User
 from datetime import date
 # Create your models here.
 
-## serve to store the bancking details of staffs
-class BankAccount(models.model):
+## serve to store the backing details of staffs 
+# see if the relation causes problem in creation
+class BankAccount(models.Model):
     bank_name = models.CharField(max_length = 100, blank = False)
     account_number = models.CharField(max_length = 100, blank = False)
 

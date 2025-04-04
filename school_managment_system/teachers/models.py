@@ -2,7 +2,7 @@ from django.db import models
 from staffs.models import Staff
 # Create your models here.
 
-## used to create a teacher entity extending Staff class and the Staff class also extendin the User class
+## used to create a teacher entity extending Staff class and the Staff class also extending the User class
 class Teacher(Staff):
     ## field of specialization of the teacher
     specialization = models.CharField(max_length = 255)

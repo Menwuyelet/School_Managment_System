@@ -1,26 +1,26 @@
 from django.db import models
-from acadamics.models import Classes, Subject, Schedule, History
+from django.apps import apps
 from parents.models import Parent
 from teachers.models import Teacher
 from users.models import User
 from datetime import date
 from decimal import Decimal
-# Create your models here.
 
 ## used to create Student user extending the User model and adding additional relations
 class Student(User):
     enrollment_date = models.DateField(default = date.today)
    
     # Relationships
-    class_assigned = models.ForeignKey(Classes, on_delete=models.CASCADE, related_name='students')
-    parents = models.ManyToManyField(Parent, related_name='children')
-    histories = models.ManyToManyField(History, related_name='students')
+    class_assigned = models.ForeignKey('acadamics.Classes', on_delete = models.CASCADE, related_name = 'students')
+    parents = models.ManyToManyField(Parent, related_name = 'children')
+    histories = models.ManyToManyField('acadamics.History', related_name = 'students')
 
-    # Inheriting attributes from class (Subjects, Schedule, Teachers, Homeroom Teacher)
-    subjects = models.ManyToManyField(Subject, related_name='students')
-    schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True, related_name='students')
-    teachers = models.ManyToManyField(Teacher, related_name='students')
-    homeroom_teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, related_name='homeroom_students')
+    # Inheriting attributes from class (Subjects, Schedule, Teachers, Homeroom Teacher) 
+    # See if i can make the bellow properties stay in class model
+    subjects = models.ManyToManyField('acadamics.Subject', related_name = 'students')
+    schedule = models.ForeignKey('acadamics.Schedule', on_delete=models.SET_NULL, null=True, related_name='students')
+    teachers = models.ManyToManyField(Teacher, related_name = 'students')
+    homeroom_teacher = models.ForeignKey(Teacher, on_delete = models.SET_NULL, null = True, related_name = 'homeroom_teacher')
 
     def save(self, *args, **kwargs):
         if not self.user_id:
