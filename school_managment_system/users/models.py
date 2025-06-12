@@ -7,7 +7,20 @@ class Contact(models.Model):
     contact_id = models.CharField(primary_key = True, max_length = 15, unique = True)
     email = models.EmailField(max_length = 200, unique = True, blank = True, default = "")
     phone = models.CharField(max_length = 20, unique = True, blank = True, default = "")
-    
+
+    def save(self, *args, **kwargs):
+        if not self.contact_id:
+            last_contact = Contact.objects.order_by('-contact_id').first()
+            if last_contact:
+                try:
+                    last_number = int(last_contact.contact_id.replace('CON', ''))
+                except ValueError:
+                    last_number = 999
+            else:
+                last_number = 999
+            self.contact_id = f"CON{last_number + 1}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.email}, {self.phone}"
     
@@ -19,6 +32,19 @@ class Address(models.Model):
     kebele = models.CharField(max_length = 20, blank = False)
     home_number = models.CharField(max_length = 20, blank = True)
     postal_number = models.CharField(max_length = 20, blank = True)
+
+    def save(self, *args, **kwargs):
+        if not self.address_id:
+            last_address = Address.objects.order_by('-address_id').first()
+            if last_address:
+                try:
+                    last_number = int(last_address.address_id.replace('ADD', ''))
+                except ValueError:
+                    last_number = 999
+            else:
+                last_number = 999
+            self.address_id = f"ADD{last_number + 1}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.city}, {self.kebele}, {self.home_number}, {self.postal_number}"
@@ -57,13 +83,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default = False)
     USERNAME_FIELD = 'user_id'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'date_of_birth',  'gender']
-
-    def set_contact_and_address(self, email, phone, city, kebele, home_number='', postal_number=''):
-        contact = Contact.objects.create(email=email, phone=phone)
-        address = Address.objects.create(city=city, kebele=kebele, home_number=home_number, postal_number=postal_number)
-        self.contact = contact
-        self.address = address
-        self.save()
 
     objects = UserManager()
 
