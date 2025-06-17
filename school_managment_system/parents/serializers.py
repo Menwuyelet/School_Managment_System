@@ -19,6 +19,7 @@ class ParentSerializer(UserSerializer):
         address.save()
         
         parent = Parent.objects.create(contact = contact, address = address, **validated_data)
+        
         return parent
 
     def update(self, instance, validated_data):

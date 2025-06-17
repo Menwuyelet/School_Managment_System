@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Student, PaymentCategory, StudentPayment
+from .models import Student, StudentPayment
 from users.serializers import UserSerializer
 from parents.models import Parent
 from parents.serializers import ParentSerializer
@@ -26,20 +26,21 @@ class StudentSerializer(UserSerializer):
 
         parent_instances = []
         for parent_dict in parent_data:
-            parent_id = parent_dict.get('user_id')  # Or just 'id' depending on your field
+            parent_id = parent_dict.get('user_id') 
             if parent_id:
                 # Existing parent
                 try:
-                    parent = Parent.objects.get(user_id=parent_id)
+                    parent = Parent.objects.get(user_id = parent_id)
                     parent_instances.append(parent)
                 except Parent.DoesNotExist:
                     raise serializers.ValidationError(f"Parent with ID {parent_id} not found.")
             else:
                 # New parent: create from nested data
-                parent_serializer = ParentSerializer(data=parent_dict)
-                parent_serializer.is_valid(raise_exception=True)
+                parent_serializer = ParentSerializer(data = parent_dict)
+                parent_serializer.is_valid(raise_exception = True)
                 parent = parent_serializer.save()
                 parent_instances.append(parent)
+
         student.parents.set(parent_instances)
         return student
     
@@ -68,6 +69,16 @@ class StudentSerializer(UserSerializer):
                 setattr(instance, attr, value)
             instance.save()
         return instance
+    
+class StudentPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentPayment
+        fields = ['payment_code','student', 'name', 'description', 'amount', 'payment_date', 'payment_method']
+        read_only_fields = ['payment_code']
+    def create(self, validated_data):
+        return StudentPayment.objects.create(**validated_data)
+    
+
     
 
 

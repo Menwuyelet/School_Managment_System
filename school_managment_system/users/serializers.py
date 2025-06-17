@@ -7,6 +7,7 @@ class ContactSerializer(serializers.ModelSerializer):
         model = Contact
         fields = ['contact_id', 'email', 'phone']
         read_only_fields = ['contact_id']
+        
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address

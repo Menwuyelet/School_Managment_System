@@ -7,7 +7,7 @@ class Parent(User):
     def save(self, *args, **kwargs):
         if not self.user_id:
             year_suffix = str(datetime.now().year)[-2:]
-            last_parent= Parent.objects.filter(user_id__endswith=f"/{year_suffix}", user_id__startswith=f"{self.school_abbr}/PA") \
+            last_parent= Parent.objects.filter(user_id__endswith=f"/{year_suffix}", user_id__startswith = f"{self.school_abbr}/PA") \
                                             .order_by('-user_id').first()
             last_number = int(last_parent.user_id.split('/')[1]) + 1 if last_parent else 1000
             self.user_id = f"{self.school_abbr}/PA{last_number}/{year_suffix}"
