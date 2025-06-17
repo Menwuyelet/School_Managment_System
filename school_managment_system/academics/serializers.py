@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Subject, Schedule, Classes, Grade, History
-
+from students.serializers import StudentSerializer
+# from teachers.serializers import TeacherSerializer
 class SubjectSerializer(serializers.ModelSerializer):
+    # teachers = TeacherSerializer( many = True)
     class Meta:
         model = Subject
         fields = ['subject_id', 'subject_name', 'teachers']
@@ -91,6 +93,41 @@ class ClassesSerializer(serializers.ModelSerializer):
                         raise serializers.ValidationError(f"Subject with id {subject_id} not found.")
             instance.subjects.set(subject_instances)
 
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+
+class GradeSerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
+    subject = SubjectSerializer()
+    # teacher = TeacherSerializer()
+
+    class Meta:
+        model = Grade
+        fields = ['student', 'subject', 'teacher', 'assessment_type', 'score', 'grade_id']
+
+    def create(self, validated_data):
+        return Grade.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+    
+class HistorySerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
+
+    class Meta:
+        model = History
+        fields = ['student', 'academic_year', 'summary', 'overall_status']
+
+    def create(self, validated_data):
+        return History.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

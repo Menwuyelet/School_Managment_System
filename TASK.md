@@ -79,4 +79,5 @@ def save(self, *args, **kwargs):
 
 
 
-## finish the serializers for the remaining models.
+## fix the grade and history serializers to insure the inclusion of student and subject models.
+## work on the staff and the teacher serializers and uncomment and complete the serializers in the academics to include the teacher serializer.

@@ -39,10 +39,9 @@ class Grade(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete = models.SET_NULL, null = True, related_name = 'teacher')  # Only teacher can update
     assessment_type = models.CharField(max_length=50)  # E.g., "Exam", "Assignment", "Quiz"
     score = models.FloatField()  # Individual assessment score
-
-    class Meta:
-        unique_together = ('student', 'subject', 'assessment_type')  # One grade per assessment per subject
-
+    grade_id = models.CharField(max_length = 30, unique = True, default = f"{student} - {subject} - {assessment_type}")
+    # class Meta:
+    #     unique_together = ('student', 'subject', 'assessment_type')  # One grade per assessment per subject
     def __str__(self):
         return f"{self.student} - {self.subject} ({self.assessment_type}): {self.score}"
     

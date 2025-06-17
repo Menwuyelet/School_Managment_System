@@ -4,9 +4,11 @@ from users.serializers import UserSerializer
 from parents.models import Parent
 from parents.serializers import ParentSerializer
 from users.models import Address, Contact
+from academics.serializers import ClassesSerializer
 
 class StudentSerializer(UserSerializer):
     parents = ParentSerializer(many = True)
+    class_assigned = ClassesSerializer(read_only = True)
     class Meta(UserSerializer.Meta):
         model = Student
         fields = UserSerializer.Meta.fields + ['enrollment_date', 'class_assigned', 'parents']
