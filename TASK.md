@@ -79,5 +79,4 @@ def save(self, *args, **kwargs):
 
 
 
-## user, parent and Student serializer almost done with the serializers for payment related things are still waiting.
 ## finish the serializers for the remaining models.

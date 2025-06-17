@@ -75,19 +75,8 @@ class StudentPaymentSerializer(serializers.ModelSerializer):
         model = StudentPayment
         fields = ['payment_code','student', 'name', 'description', 'amount', 'payment_date', 'payment_method']
         read_only_fields = ['payment_code']
+
     def create(self, validated_data):
         return StudentPayment.objects.create(**validated_data)
     
-
-    
-
-
-
-
-
-
-
-
-
-
 

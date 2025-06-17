@@ -6,8 +6,8 @@ from staffs.models import Staff
 class Teacher(Staff):
     ## field of specialization of the teacher
     specialization = models.CharField(max_length = 255)
-    class_assigned = models.ManyToManyField('academics.Classes', related_name = 'teachers', blank = True, null = True)
-    home_room = models.ManyToManyField('academics.Classes', related_name = 'head_teacher', blank = True, null = True)
+    class_assigned = models.ManyToManyField('academics.Classes', related_name = 'teachers', blank = True)
+    home_room = models.ManyToManyField('academics.Classes', related_name = 'head_teacher', blank = True)
     
     def __str__(self):
         return f"{self.user_id} - {self.first_name} {self.last_name}"

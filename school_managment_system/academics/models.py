@@ -8,7 +8,7 @@ from teachers.models import Teacher
 class Subject(models.Model):
     subject_id = models.CharField(max_length = 20, unique = True, primary_key = True)
     subject_name = models.CharField(max_length = 20, blank = False, null = False)
-    teachers = models.ManyToManyField('teachers.Teacher', related_name = 'subjects')
+    teachers = models.ManyToManyField('teachers.Teacher', related_name = 'subjects', blank = True, default = 'No Teachers' )
     def __str__(self):
         return self.subject_id
 
@@ -26,8 +26,8 @@ class Classes(models.Model):
     class_id = models.CharField(max_length = 20, unique = True, primary_key = True)
     class_name = models.CharField(max_length = 50, null = False)
     academic_year = models.CharField(max_length = 10, null = False)
-    subjects = models.ManyToManyField('Subject', related_name = 'classes_given_in')
-    schedule = models.ForeignKey('Schedule', on_delete = models.SET_NULL, null = True, related_name = 'class_for' )
+    subjects = models.ManyToManyField('Subject', related_name = 'classes_given_in', blank = True, default = 'No subjects')
+    schedule = models.ForeignKey('Schedule', on_delete = models.SET_DEFAULT, related_name = 'class_for', default = 'No schedule')
 
     def __str__(self):
         return f"{self.class_id}, {self.class_name}"
