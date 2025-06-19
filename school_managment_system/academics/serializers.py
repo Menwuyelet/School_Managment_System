@@ -1,28 +1,35 @@
 from rest_framework import serializers
 from .models import Subject, Schedule, Classes, Grade, History
 from students.serializers import StudentSerializer
-# from teachers.serializers import TeacherSerializer
+from teachers.serializers import TeacherSerializer
+from students.models import Student
+from teachers.models import Teacher
+
+
 class SubjectSerializer(serializers.ModelSerializer):
-    # teachers = TeacherSerializer( many = True)
+    teachers = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Teacher.objects.all()
+    )
     class Meta:
         model = Subject
         fields = ['subject_id', 'subject_name', 'teachers']
     
     def create(self, validated_data):
-        return Subject.objects.create(**validated_data)
+        teachers = validated_data.pop('teachers', [])
+        subject = Subject.objects.create(**validated_data)
+        subject.teachers.set(teachers)
+        return subject
     
     def update(self, instance, validated_data):
-        teachers_data = validated_data.pop('teachers')
+        teachers_data = validated_data.pop('teachers',  None)        
+      
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
-        if teachers_data:
-            for attr, value in teachers_data.items():
-                setattr(instance.teachers, attr, value)
-            instance.teachers.save()
-        
-        if validated_data:
-            for attr, value in validated_data.items():
-                setattr(instance, attr, value)
-            instance.save()
+        if teachers_data is not None:
+            instance.teachers.set(teachers_data)
+        instance.save()
         return instance
     
 
@@ -100,9 +107,9 @@ class ClassesSerializer(serializers.ModelSerializer):
 
 
 class GradeSerializer(serializers.ModelSerializer):
-    student = StudentSerializer()
-    subject = SubjectSerializer()
-    # teacher = TeacherSerializer()
+    student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
+    subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+    teacher = serializers.PrimaryKeyRelatedField(queryset=Teacher.objects.all())
 
     class Meta:
         model = Grade
@@ -118,8 +125,7 @@ class GradeSerializer(serializers.ModelSerializer):
         return instance
     
 class HistorySerializer(serializers.ModelSerializer):
-    student = StudentSerializer()
-
+    student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
     class Meta:
         model = History
         fields = ['student', 'academic_year', 'summary', 'overall_status']

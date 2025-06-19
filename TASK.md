@@ -79,5 +79,6 @@ def save(self, *args, **kwargs):
 
 
 
-## fix the grade and history serializers to insure the inclusion of student and subject models.
-## work on the staff and the teacher serializers and uncomment and complete the serializers in the academics to include the teacher serializer.
+
+## update the staff model to support the role based permission
+## update the teacher and the schedule to allow a teacher access their schedule  

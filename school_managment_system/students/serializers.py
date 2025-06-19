@@ -11,7 +11,11 @@ class StudentSerializer(UserSerializer):
     class_assigned = ClassesSerializer(read_only = True)
     class Meta(UserSerializer.Meta):
         model = Student
-        fields = UserSerializer.Meta.fields + ['enrollment_date', 'class_assigned', 'parents']
+        fields = UserSerializer.Meta.fields + [
+            'enrollment_date', 
+            'class_assigned', 
+            'parents'
+            ]
         read_only_fields = ['user_id']
 
     def create(self, validated_data):
