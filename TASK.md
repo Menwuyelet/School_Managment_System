@@ -80,5 +80,5 @@ def save(self, *args, **kwargs):
 
 
 
-## update the staff model to support the role based permission
+## write the views for all ensuring role based permission from model part
 ## update the teacher and the schedule to allow a teacher access their schedule  

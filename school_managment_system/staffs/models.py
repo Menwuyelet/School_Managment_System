@@ -11,10 +11,20 @@ class BankAccount(models.Model):
 
 # ## serves to hold all staffs in the school extending the User model
 class Staff(User):
-    role = models.CharField(max_length = 100, blank = False)
+    ADMIN = 'admin'
+    TEACHER = 'teacher'
+    OFFICE_STAFF = 'office_staff'
+
+    ROLE_CHOICES = [
+        (ADMIN,'Admin'),
+        (TEACHER, 'Teacher'),
+        (OFFICE_STAFF, 'Office staff')
+    ]
+
+    role = models.CharField(max_length = 20, choices = ROLE_CHOICES)
     hiring_date = models.DateField(default = date.today)
     salary = models.FloatField(blank = False)
     bank_account = models.OneToOneField(BankAccount, on_delete = models.CASCADE, unique = True)
 
     def __str__(self):
-        return self.staff_id 
+        return self.user_id 
